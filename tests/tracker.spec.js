@@ -37,10 +37,7 @@ test('expense creation, chart/list colors, persistence, Sunday report, download 
   await expect(page.getByRole('cell', { name: '$15.75', exact: true })).toBeVisible();
   await expect(page.getByRole('cell', { name: '18/sep/26 friday' })).toBeVisible();
   await expect(page.locator('.expense-table .category-dot')).toHaveCSS('background-color', 'rgb(104, 155, 138)');
-  await page.getByRole('button', { name: 'Switch to dark mode' }).click();
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   await page.reload();
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   await page.getByLabel('Choose a date in the report week').fill('2026-09-17');
   await expect(page.getByRole('cell', { name: '$15.75', exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Weekly report', exact: true }).click();
@@ -51,7 +48,7 @@ test('expense creation, chart/list colors, persistence, Sunday report, download 
   await expect(page.getByRole('region', { name: 'Expenses for 2026-09-18' })).toContainText('Metro estación');
   await expect(page.getByRole('region', { name: 'Expenses for 2026-09-18' })).toContainText('Transporte a la universidad. Café después.');
   await page.evaluate(() => window.scrollTo(0, 0));
-  await page.screenshot({ path: 'test-results/report-dark.png', fullPage: true });
+  await page.screenshot({ path: 'test-results/report.png', fullPage: true });
   const downloadPromise = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Download report (.pdf)' }).click();
   const download = await downloadPromise;
@@ -68,17 +65,11 @@ test('expense creation, chart/list colors, persistence, Sunday report, download 
   await page.getByRole('button', { name: 'Load sample week' }).click();
   await expect(page.locator('.expense-table tbody tr')).toHaveCount(8);
   await page.evaluate(() => window.scrollTo(0, 0));
-  await page.screenshot({ path: 'test-results/dashboard-dark.png', fullPage: true });
-  await page.getByRole('button', { name: 'Switch to light mode' }).click();
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
   await page.screenshot({ path: 'test-results/dashboard-desktop.png', fullPage: true });
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(page.getByRole('button', { name: 'Save expense' })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   await page.screenshot({ path: 'test-results/dashboard-mobile.png', fullPage: true });
-  await page.getByRole('button', { name: 'Switch to dark mode' }).click();
-  await expect(page.locator('.nav-item.active')).toHaveCSS('background-color', 'rgb(41, 60, 85)');
-  await page.screenshot({ path: 'test-results/dashboard-mobile-dark.png', fullPage: true });
   expect(errors).toEqual([]);
 });
 

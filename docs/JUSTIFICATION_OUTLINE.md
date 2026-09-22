@@ -49,7 +49,7 @@
 
 - Reports include Monday through Sunday, with seven rows even for days with no expenses. Integer cents ensure exact sums; display formatting converts to dollars.
 - Explain the manual Sunday simulation and downloadable PDF report with itemized expenses, notes and daily subtotals. Do not describe it as a real scheduled job.
-- Cite test evidence: valid/invalid dates, year and leap-day boundaries, Singleton identity, persistent records, exact weekly totals, browser save/edit/delete/report flow, persistent light/dark preference and responsive layout checks.
+- Cite test evidence: valid/invalid dates, year and leap-day boundaries, Singleton identity, persistent records, exact weekly totals, browser save/edit/delete/report flow and responsive layout checks.
 - Include a screenshot of the chart/list or weekly report, if space permits.
 - Close with a direct connection to the rubric: all four features work end-to-end, and exactly MVC, Singleton and Factory are explicitly implemented and documented.
 

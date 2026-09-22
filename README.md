@@ -71,8 +71,7 @@ Open **http://127.0.0.1:3001**. Express serves both the compiled frontend and AP
 5. Search expenses by name, category, or reason. Search filters the list; the chart continues to represent the whole selected week.
 6. Open **Weekly report**, click **Simulate Sunday report**, and optionally **Download report (.pdf)**. Both the screen and PDF list each day's expenses, categories, notes and amounts, followed by daily subtotals and the weekly total. Zero-spending days are included.
 7. Use the pencil icon to edit an expense in the Overview form. Save changes or cancel; saving recalculates the category/color and reports, preserves the ID, and opens the new week if you change the date.
-8. Use the moon/sun button at the top to switch between light and dark modes. The first visit follows the system preference; your choice is then saved in the browser.
-9. Use an expense's trash icon and confirmation dialog to delete it. Totals update immediately.
+8. Use an expense's trash icon and confirmation dialog to delete it. Totals update immediately.
 
 All money is USD, with no currency conversion. Entered amounts are stored as integer cents to avoid floating-point addition errors. Each category's pie slice is proportional to its combined expense amount; list dots use the exact same Factory-assigned color.
 
@@ -106,7 +105,6 @@ The Sunday feature is an explicit simulation: selecting any day resolves its Mon
 │           ├── ExpenseForm.jsx
 │           ├── SpendingChart.jsx
 │           ├── ExpenseList.jsx
-│           ├── ThemeToggle.jsx
 │           └── WeeklyReport.jsx
 └── server/
     ├── package.json
@@ -194,7 +192,7 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-The browser tests run their own servers and use `test-results/e2e-expenses.json`. They cover saving and editing, cancelling edits, chart/list colors, page reload, theme persistence, detailed Sunday reports, real PDF downloads, empty reports and multi-page reports with long Spanish notes, search, deletion, sample data and a mobile overflow check. Screenshots are saved under `test-results/`. To use installed Microsoft Edge instead of downloading Chromium, in PowerShell run `$env:PLAYWRIGHT_CHANNEL='msedge'` before `npm run test:e2e`.
+The browser tests run their own servers and use `test-results/e2e-expenses.json`. They cover saving and editing, cancelling edits, chart/list colors, page reload, detailed Sunday reports, real PDF downloads, empty reports and multi-page reports with long Spanish notes, search, deletion, sample data and a mobile overflow check. Screenshots are saved under `test-results/`. To use installed Microsoft Edge instead of downloading Chromium, in PowerShell run `$env:PLAYWRIGHT_CHANNEL='msedge'` before `npm run test:e2e`.
 
 For the graded demo: add “Coffee with friends”, amount `12.50`, date `2026-09-17`, and reason “Study break”; verify the date text and food color; add another category to demonstrate proportional chart segments; generate the report ending September 20; show all seven daily rows and the total; refresh the page to show persistence; explain the three source markers in the table above.
 

@@ -7,7 +7,6 @@ Los gastos se guardan en **`server/data/expenses.json`**, dentro de este proyect
 - El archivo conserva los gastos al cerrar el navegador o reiniciar el servidor.
 - El navegador no es la base de datos: borrar su caché no elimina ese archivo.
 - El archivo incluye identificador, concepto, importe en centavos, fecha, nota, categoría, color y fecha de creación.
-- La preferencia de tema se guarda por separado en el navegador, bajo la clave `penny-theme` de `localStorage`. Cada dispositivo puede elegir su propio tema.
 - Los PDF se generan en el navegador con los datos del reporte. Descargar uno no modifica los gastos.
 - Para un respaldo completo, detén el backend y copia `server/data/expenses.json` a una ubicación segura. Un PDF es un reporte, no un archivo de restauración.
 

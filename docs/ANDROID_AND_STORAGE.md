@@ -56,11 +56,13 @@ Antes de publicar hacen falta estos cambios:
 
 Se puede conservar el esquema de la rúbrica: MVC para separar responsabilidades, Singleton para administrar una conexión de datos y Factory para validar/crear gastos.
 
-## Cómo generar el APK cuando la API compartida esté preparada
+## Android con backend compartido (opcional)
 
-**Esta entrega no incluye un APK ni un proyecto Android compilado.** Los pasos siguientes explican la siguiente fase. Capacitor empaqueta el frontend web; no ejecuta automáticamente Express dentro del teléfono.
+Para el modo personal sin conexión, sigue la sección **Personal Android app (offline)** del README; ese modo usa SQLite en el teléfono y no necesita un servidor compartido.
 
-1. Instala Android Studio y el SDK/JDK requeridos por la versión de Capacitor elegida. Revisa los requisitos vigentes en la [guía de entorno](https://capacitorjs.com/docs/getting-started/environment-setup).
+Esta opción es sólo para compartir los datos con la computadora. El APK local y SQLite del teléfono están implementados aparte; Capacitor no ejecuta Express dentro del teléfono.
+
+1. Instala Android Studio y el SDK requeridos por la versión de Capacitor. Revisa los requisitos vigentes en la [guía de entorno](https://capacitorjs.com/docs/getting-started/environment-setup).
 2. Después de adaptar y probar la URL de la API, ejecuta desde `client/`:
 
    ```sh
@@ -83,7 +85,7 @@ Se puede conservar el esquema de la rúbrica: MVC para separar responsabilidades
 4. Android Studio abrirá la carpeta `client/android`. Prueba en el Samsung conectado por USB o en un emulador.
 5. Para un APK de prueba, genera el APK de depuración desde las opciones de compilación. Una alternativa en PowerShell dentro de `client/android` es `./gradlew.bat assembleDebug`; la salida habitual es `app/build/outputs/apk/debug/app-debug.apk`.
 6. Transfiere el APK al Samsung y autoriza su instalación desde la aplicación que abre ese archivo. Para distribuir una versión final, genera y firma un APK de release y conserva la clave de firma.
-7. Valida también guardar/compartir el PDF en Android. La descarga web actual funciona en el navegador; el contenedor nativo puede requerir las APIs Filesystem/Share de Capacitor para guardar y compartir el archivo.
+7. Valida guardar y compartir datos desde ambos dispositivos.
 
 Después de modificar React: `npm run build`, `npx cap sync android` y una nueva compilación Android.
 

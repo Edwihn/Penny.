@@ -47,7 +47,7 @@
 
 ## 6. Correctness, demonstration and limitations (100–140 words)
 
-- Reports include Monday through Sunday, with seven rows even for days with no expenses. Integer cents ensure exact sums; display formatting converts to dollars.
+- Reports include Monday through Sunday, with seven rows even for days with no expenses. Integer cents ensure exact sums; display formatting converts to Mexican pesos (MXN).
 - Explain the manual Sunday simulation and downloadable PDF report with itemized expenses, notes and daily subtotals. Do not describe it as a real scheduled job.
 - Cite test evidence: valid/invalid dates, year and leap-day boundaries, Singleton identity, persistent records, exact weekly totals, browser save/edit/delete/report flow and responsive layout checks.
 - Include a screenshot of the chart/list or weekly report, if space permits.
@@ -59,7 +59,7 @@
 - Screenshot of a Sunday report with seven days and its weekly total.
 - README pattern-location table and `// PATTERN:` source markers.
 - Output of `npm test`, `npm run build` and `npm run test:e2e` from your machine.
-- State the demonstrated limitations: single user, one backend process, local JSON persistence, USD only, manual report simulation, English keyword inference with manual override.
+- State the demonstrated limitations: single user, one backend process, local JSON persistence, MXN only, manual report simulation, English keyword inference with manual override.
 
 ## Suggested references
 

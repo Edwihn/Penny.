@@ -1,14 +1,17 @@
 import { money } from './utils.js';
+import { Capacitor } from '@capacitor/core';
+import { Directory, Filesystem } from '@capacitor/filesystem';
+import { Share } from '@capacitor/share';
 
 // MVC View: printable representation of the same backend-calculated weekly report.
 // PDF formatting is a helper, not an additional application design pattern.
 export function reportDefinition(report) {
   const content = [
     { text: 'penny.', color: '#294e3e', bold: true, fontSize: 28 },
-    { text: 'Weekly expense report', style: 'title', margin: [0, 8, 0, 5] },
-    { text: `Monday ${report.start} - Sunday ${report.end}`, color: '#56645b', margin: [0, 0, 0, 4] },
-    { text: `Sunday simulation: ${report.simulatedRunDate}  |  Currency: USD`, style: 'muted', margin: [0, 0, 0, 16] },
-    { columns: [{ text: 'WEEKLY TOTAL', bold: true, color: '#294e3e' }, { text: money(report.totalCents), alignment: 'right', bold: true, fontSize: 19 }], margin: [0, 0, 0, 16] },
+    { text: 'Reporte semanal de gastos', style: 'title', margin: [0, 8, 0, 5] },
+    { text: `Lunes ${report.start} - domingo ${report.end}`, color: '#56645b', margin: [0, 0, 0, 4] },
+    { text: `Reporte semanal  |  Moneda: MXN`, style: 'muted', margin: [0, 0, 0, 16] },
+    { columns: [{ text: 'TOTAL DE LA SEMANA', bold: true, color: '#294e3e' }, { text: money(report.totalCents), alignment: 'right', bold: true, fontSize: 19 }], margin: [0, 0, 0, 16] },
   ];
   for (const day of report.days) {
     const heading = { text: day.formattedDate, bold: true, fontSize: 12, color: '#294e3e', margin: [0, 12, 0, 6], headlineLevel: 1 };
@@ -19,7 +22,7 @@ export function reportDefinition(report) {
           // A note with many line breaks can be taller than a page; allow it to continue.
           headerRows: 1, dontBreakRows: false, widths: ['*', 90, 68],
           body: [
-            ['EXPENSE / NOTE', 'CATEGORY', 'AMOUNT'].map((text, index) => ({ text, bold: true, color: '#294e3e', fontSize: 8, alignment: index === 2 ? 'right' : 'left' })),
+          ['GASTO / NOTA', 'CATEGORÍA', 'IMPORTE'].map((text, index) => ({ text, bold: true, color: '#294e3e', fontSize: 8, alignment: index === 2 ? 'right' : 'left' })),
             ...day.expenses.map(expense => [
               { stack: [{ text: expense.concept, bold: true }, ...(expense.reason ? [{ text: expense.reason, style: 'muted', margin: [0, 4, 0, 0] }] : [])] },
               { text: expense.categoryLabel, color: '#46574c' },
@@ -30,17 +33,17 @@ export function reportDefinition(report) {
         layout: { hLineWidth: () => 0.5, vLineWidth: () => 0, hLineColor: () => '#dce3da', paddingTop: () => 9, paddingBottom: () => 9, paddingLeft: () => 9, paddingRight: () => 9 },
       });
     }
-    content.push({ columns: [{ text: day.count ? `${day.count} expense${day.count === 1 ? '' : 's'}` : 'No expenses recorded.', style: 'muted' }, { text: `Daily subtotal: ${money(day.totalCents)}`, alignment: 'right', bold: true }], margin: [0, 8, 0, 6] });
+    content.push({ columns: [{ text: day.count ? `${day.count} ${day.count === 1 ? 'gasto' : 'gastos'}` : 'Sin gastos registrados.', style: 'muted' }, { text: `Subtotal del día: ${money(day.totalCents)}`, alignment: 'right', bold: true }], margin: [0, 8, 0, 6] });
   }
-  content.push({ text: `WEEKLY TOTAL: ${money(report.totalCents)}`, alignment: 'right', bold: true, fontSize: 15, color: '#294e3e', margin: [0, 20, 0, 0] });
+  content.push({ text: `TOTAL DE LA SEMANA: ${money(report.totalCents)}`, alignment: 'right', bold: true, fontSize: 15, color: '#294e3e', margin: [0, 20, 0, 0] });
   return {
-    info: { title: `Penny weekly report ${report.end}`, author: 'Penny Expense Tracker' },
+    info: { title: `Reporte semanal de Penny ${report.end}`, author: 'Penny' },
     pageSize: 'A4', pageMargins: [42, 40, 42, 48],
     defaultStyle: { font: 'Roboto', fontSize: 10, color: '#293d34', lineHeight: 1.2 },
     styles: { title: { fontSize: 20, bold: true }, muted: { fontSize: 9, color: '#68776d' } },
     content,
     pageBreakBefore: (node, following) => node.headlineLevel === 1 && following.length === 0,
-    footer: (current, total) => ({ text: `Penny  |  ${report.start} - ${report.end}  |  Page ${current} of ${total}`, alignment: 'center', fontSize: 8, color: '#68776d', margin: [42, 18, 42, 0] }),
+    footer: (current, total) => ({ text: `Penny  |  ${report.start} - ${report.end}  |  Página ${current} de ${total}`, alignment: 'center', fontSize: 8, color: '#68776d', margin: [42, 18, 42, 0] }),
   };
 }
 
@@ -52,6 +55,18 @@ export async function downloadReportPdf(report) {
   pdfMake.addVirtualFileSystem(fonts);
   const pdf = pdfMake.createPdf(reportDefinition(report));
   const blob = await new Promise(resolve => pdf.getBlob(resolve));
+  if (Capacitor.isNativePlatform()) {
+    const dataUrl = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result.split(',')[1]);
+      reader.onerror = () => reject(reader.error);
+      reader.readAsDataURL(blob);
+    });
+    const filename = `penny-reporte-${report.end}.pdf`;
+    const file = await Filesystem.writeFile({ path: filename, data: dataUrl, directory: Directory.Cache, recursive: true });
+    await Share.share({ title: 'Reporte semanal de Penny', files: [file.uri], dialogTitle: 'Guardar o compartir el reporte' });
+    return;
+  }
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement('a');
   anchor.href = url;

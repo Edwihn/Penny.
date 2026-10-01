@@ -1,0 +1,9 @@
+{
+  "appId": "com.penny.personalexpenses",
+  "appName": "Penny",
+  "webDir": "dist",
+  "backgroundColor": "#f8f9f5",
+  "android": {
+    "allowMixedContent": false
+  }
+}

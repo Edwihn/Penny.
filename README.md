@@ -73,7 +73,7 @@ Open **http://127.0.0.1:3001**. Express serves both the compiled frontend and AP
 7. Use the pencil icon to edit an expense in the Overview form. Save changes or cancel; saving recalculates the category/color and reports, preserves the ID, and opens the new week if you change the date.
 8. Use an expense's trash icon and confirmation dialog to delete it. Totals update immediately.
 
-All money is USD, with no currency conversion. Entered amounts are stored as integer cents to avoid floating-point addition errors. Each category's pie slice is proportional to its combined expense amount; list dots use the exact same Factory-assigned color.
+All money is shown in Mexican pesos (MXN), with no currency conversion. Entered amounts are stored as integer cents to avoid floating-point addition errors. Existing numeric amounts are preserved when updating the Android app. Each category's pie slice is proportional to its combined expense amount; list dots use the exact same Factory-assigned color.
 
 Dates are stored as `YYYY-MM-DD`. The Factory formats `2026-09-17` as **`17/sep/26 thursday`**. The **concept controls category/color**, while the **entered calendar date controls the formatted date**. A concept cannot determine when an expense happened. UTC-based calendar arithmetic prevents timezone/DST shifts.
 
@@ -208,7 +208,15 @@ For the graded demo: add “Coffee with friends”, amount `12.50`, date `2026-0
 
 ## Samsung, APK and shared data
 
-See [`docs/ANDROID_AND_STORAGE.md`](docs/ANDROID_AND_STORAGE.md) for the exact storage location, a same-Wi-Fi preview using the optional `HOST` setting, and the steps to build an APK with Capacitor and Android Studio after configuring a shared HTTPS backend. No APK or cloud deployment is included.
+See [`docs/ANDROID_AND_STORAGE.md`](docs/ANDROID_AND_STORAGE.md) for the desktop data location, same-Wi-Fi preview, and shared-backend architecture. The Android app now also has an offline mode described below; cloud deployment is not included.
+
+### Personal Android app (offline)
+
+The Android project uses SQLite on the phone; it works without the Express server. Build/sync the app with `npm run android:sync`, then in PowerShell set `$env:JAVA_HOME = 'C:\Program Files\Android\Android Studio\jbr'`, change to `client/android`, and run `./gradlew.bat assembleDebug`. The APK is created at `client/android/app/build/outputs/apk/debug/app-debug.apk`. Copy it to the phone and open it to install. Android may ask you to allow installs from the file app you used.
+
+On Android, use **Backup** to share a JSON copy somewhere outside the phone and **Import** to add data from a backup or the existing `server/data/expenses.json` file. To migrate the existing data, copy that file to the phone first. Import skips IDs that already exist and keeps the data already on the phone. Android deletes app-private files on uninstall, so keep an external backup. Build updates with the same app identifier and signing key to keep app data and allow an in-place update. The debug APK is for personal trial; back up a release signing key before making a long-term release.
+
+Version 1.1 uses a responsive phone layout and displays all amounts in MXN. Install its APK over the existing installation to retain local SQLite data. The update preserves the numeric amounts already entered; it does not apply an exchange rate. New backup files identify the currency as MXN, and importing a backup explicitly marked with another currency is rejected.
 
 ## Justification document
 
